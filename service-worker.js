@@ -1,7 +1,8 @@
-const CACHE_NAME = "pwa-datos-cache";
+const CACHE_NAME = "pwa-datos-cache-v1";
 const urlsToCache = [
     "index.html",
-    "manifest.json"
+    "manifest.json",
+    "icon.png"
 ];
 
 // Instalación del Service Worker
@@ -23,3 +24,4 @@ self.addEventListener("fetch", event => {
         })
     );
 });
+
