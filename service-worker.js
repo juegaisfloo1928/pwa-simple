@@ -1,27 +1,34 @@
-const CACHE_NAME = "pwa-datos-cache-v1";
+const CACHE_NAME = "pwa-datos-cache-v2";
+
 const urlsToCache = [
     "index.html",
     "manifest.json",
     "icon.png"
 ];
 
-// Instalación del Service Worker
 self.addEventListener("install", event => {
+    self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-            return cache.addAll(urlsToCache);
-        })
+        caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
     );
 });
 
-// Activar y responder sin conexión
+self.addEventListener("activate", event => {
+    event.waitUntil(
+        caches.keys().then(keys =>
+            Promise.all(
+                keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+            )
+        )
+    );
+});
+
 self.addEventListener("fetch", event => {
     event.respondWith(
-        caches.match(event.request)
-        .then(response => {
+        caches.match(event.request).then(response => {
             return response || fetch(event.request);
         })
     );
 });
+
 
